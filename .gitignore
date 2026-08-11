@@ -1,0 +1,11 @@
+# colcon 构建产物
+build/
+install/
+log/
+
+# 通用
+*.pyc
+__pycache__/
+.vscode/
+.idea/
+compile_commands.json
