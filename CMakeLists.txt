@@ -23,6 +23,8 @@ set(CMAKE_BUILD_TYPE Release)
 
 find_package(ament_cmake QUIET)
 find_package(roboparty_motors REQUIRED)
+find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
+find_package(pybind11 REQUIRED)
 
 add_library(head STATIC
   src/head_controller.cpp
@@ -70,6 +72,20 @@ install(FILES
   "${CMAKE_CURRENT_BINARY_DIR}/roboparty_headConfig.cmake"
   "${CMAKE_CURRENT_BINARY_DIR}/roboparty_headConfigVersion.cmake"
   DESTINATION lib/cmake/roboparty_head
+)
+
+pybind11_add_module(head_motor_py
+  src/pybind_module.cpp
+)
+
+target_link_libraries(head_motor_py PUBLIC head)
+
+set(PYTHON_INSTALL_DIR "lib/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}/site-packages")
+
+install(TARGETS head_motor_py
+  LIBRARY DESTINATION ${PYTHON_INSTALL_DIR}
+  ARCHIVE DESTINATION ${PYTHON_INSTALL_DIR}
+  RUNTIME DESTINATION ${PYTHON_INSTALL_DIR}
 )
 
 if(ament_cmake_FOUND)
